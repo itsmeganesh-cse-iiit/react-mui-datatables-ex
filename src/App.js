@@ -6,13 +6,33 @@ class App extends React.Component {
     super(props);
 
     this.state = {
-      searchText: ""
+      searchText: "",
+      searchBreadCrumbs: []
     };
   }
 
   onRowClick = props => {
+    const { searchBreadCrumbs } = this.state;
+
+    let breadCrumbs = searchBreadCrumbs;
+    if (searchBreadCrumbs) {
+      breadCrumbs = ![...searchBreadCrumbs].find(each => each === props[0])
+        ? [...searchBreadCrumbs, props[0]]
+        : breadCrumbs;
+    }
+    console.log(breadCrumbs);
     this.setState({
-      searchText: props[0]
+      searchText: props[0],
+      searchBreadCrumbs: breadCrumbs
+    });
+  };
+
+  filterHandler = filter => {
+    const { searchBreadCrumbs } = this.state;
+    let breadCrumbs = [...searchBreadCrumbs].filter(each => each !== filter);
+    this.setState({
+      searchText: breadCrumbs.slice(-1),
+      searchBreadCrumbs: breadCrumbs
     });
   };
 
@@ -31,18 +51,47 @@ class App extends React.Component {
     ];
 
     return (
-      <MUIDataTable
-        title={["Part Details"]}
-        data={data}
-        columns={columns}
-        selectableRowsOnClick={false}
-        options={{
-          onRowClick: this.onRowClick,
-          searchText: this.state.searchText,
-          customToolbar: this.customToolbar,
-          selectableRows: "none"
-        }}
-      />
+      <>
+        <MUIDataTable
+          title={["Part Details"]}
+          data={data}
+          columns={columns}
+          selectableRowsOnClick={false}
+          options={{
+            onRowClick: this.onRowClick,
+            searchText: this.state.searchText,
+            customToolbar: this.customToolbar,
+            selectableRows: "none"
+          }}
+        />
+        <br />
+        <SearchBreadCrumbs
+          data={this.state.searchBreadCrumbs}
+          filterHandler={this.filterHandler}
+        />
+      </>
+    );
+  }
+}
+
+class SearchBreadCrumbs extends React.Component {
+  render() {
+    const breadCrumStyle = {};
+    return (
+      <ol>
+        {this.props.data &&
+          this.props.data.map(eachFilter => (
+            <li>
+              {eachFilter}{" "}
+              <span
+                onClick={() => this.props.filterHandler(eachFilter)}
+                style={{ cursor: "pointer" }}
+              >
+                X
+              </span>
+            </li>
+          ))}
+      </ol>
     );
   }
 }
