@@ -39,7 +39,8 @@ class App extends React.Component {
         options={{
           onRowClick: this.onRowClick,
           searchText: this.state.searchText,
-          customToolbar: this.customToolbar
+          customToolbar: this.customToolbar,
+          selectableRows: "none"
         }}
       />
     );
