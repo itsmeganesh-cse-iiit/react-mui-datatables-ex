@@ -7,22 +7,22 @@ class App extends React.Component {
 
     this.state = {
       searchText: "",
-      searchBreadCrumbs: []
+      searchBreadCrumbs: [],
+      subTitle: ""
     };
   }
 
   onRowClick = props => {
     const { searchBreadCrumbs } = this.state;
-
     let breadCrumbs = searchBreadCrumbs;
     if (searchBreadCrumbs) {
       breadCrumbs = ![...searchBreadCrumbs].find(each => each === props[0])
         ? [...searchBreadCrumbs, props[0]]
         : breadCrumbs;
     }
-    console.log(breadCrumbs);
     this.setState({
       searchText: props[0],
+      subTitle: props[0],
       searchBreadCrumbs: breadCrumbs
     });
   };
@@ -32,14 +32,24 @@ class App extends React.Component {
     let breadCrumbs = [...searchBreadCrumbs].filter(each => each !== filter);
     this.setState({
       searchText: breadCrumbs.slice(-1),
+      subTitle: breadCrumbs.slice(-1),
       searchBreadCrumbs: breadCrumbs
     });
   };
 
-  customToolbar = props => {
-    console.log("g", props);
-  };
   render() {
+    const TitleBar = props => {
+      return (
+        <div>
+          <h3>Part Details</h3>
+          <span>{props.subTitle}</span>
+          <SearchBreadCrumbs
+            data={props.data}
+            filterHandler={props.filterHandler}
+          />
+        </div>
+      );
+    };
     const columns = ["Name", "Title", "Location", "Age", "Salary"];
 
     const data = [
@@ -53,7 +63,13 @@ class App extends React.Component {
     return (
       <>
         <MUIDataTable
-          title={["Part Details"]}
+          title={
+            <TitleBar
+              subTitle={this.state.subTitle}
+              data={this.state.searchBreadCrumbs}
+              filterHandler={this.filterHandler}
+            />
+          }
           data={data}
           columns={columns}
           selectableRowsOnClick={false}
@@ -65,10 +81,6 @@ class App extends React.Component {
           }}
         />
         <br />
-        <SearchBreadCrumbs
-          data={this.state.searchBreadCrumbs}
-          filterHandler={this.filterHandler}
-        />
       </>
     );
   }
@@ -76,20 +88,29 @@ class App extends React.Component {
 
 class SearchBreadCrumbs extends React.Component {
   render() {
-    const breadCrumStyle = {};
+    const { data } = this.props;
     return (
       <ol>
-        {this.props.data &&
-          this.props.data.map(eachFilter => (
-            <li>
-              {eachFilter}{" "}
-              <span
-                onClick={() => this.props.filterHandler(eachFilter)}
-                style={{ cursor: "pointer" }}
+        {data &&
+          data.map(eachFilter => (
+            <>
+              <li
+                style={{
+                  display: "inline",
+                  border: "1px solid grey",
+                  padding: "2px"
+                }}
               >
-                X
-              </span>
-            </li>
+                {eachFilter}{" "}
+                <span
+                  onClick={() => this.props.filterHandler(eachFilter)}
+                  style={{ cursor: "pointer" }}
+                >
+                  X
+                </span>
+              </li>
+              &nbsp;
+            </>
           ))}
       </ol>
     );
