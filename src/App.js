@@ -23,18 +23,16 @@ class App extends React.Component {
     const columns = ["Name", "Title", "Location", "Age", "Salary"];
 
     const data = [
-      ["Gabby", "Business Analyst", "Minneapolis", 30, "$100,000"],
+      ["Bumper", "Business Analyst", "Minneapolis", 30, "$100,000"],
       ["Aiden", "Business Consultant", "Dallas", 55, "$200,000"],
       ["Jaden", "Attorney", "Santa Ana", 27, "$500,000"],
       ["Franky", "Business Analyst", "St. Petersburg", 22, "$50,000"],
-      ["Gabby George", "Business Consultant", "Toledo", 28, "$75,000"]
+      ["Bumper George", "Business Consultant", "Toledo", 28, "$75,000"]
     ];
-
-   
 
     return (
       <MUIDataTable
-        title={["ACME Employee list"]}
+        title={["Part Details"]}
         data={data}
         columns={columns}
         selectableRowsOnClick={false}
