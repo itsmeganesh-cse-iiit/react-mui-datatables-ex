@@ -37,6 +37,17 @@ class App extends React.Component {
     });
   };
 
+ onDownload=(buildHead, buildBody, columns, data)=>{
+   console.log(data)
+   let excelData=[]
+   let filterData={
+     data:["Filters",...this.state.searchBreadCrumbs]
+   }
+   if(this.state.searchBreadCrumbs.length>0) excelData.push(filterData)
+   excelData=[...excelData,...data]
+  return "\uFEFF" + buildHead(columns) + buildBody(excelData); 
+ }
+
   render() {
     const TitleBar = props => {
       return (
@@ -78,7 +89,13 @@ class App extends React.Component {
             searchText: this.state.searchText,
             customToolbar: this.customToolbar,
             selectableRows: "none",
-            search:false
+            search:false,
+            downloadOptions:{
+              filterOptions:{
+                useDisplayedRowsOnly:true
+              }
+            },
+            onDownload:this.onDownload
           }}
         />
         <br />
